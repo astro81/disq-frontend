@@ -11,8 +11,9 @@
 
 
     import ActionTooltip from "$lib/components/navigation/ActionTooltip.svelte";
-    // import EditChannel from "../models/channels/EditChannel.svelte";
-    // import DeleteChannel from "../models/channels/DeleteChannel.svelte";
+
+    import DeleteChannel from "$lib/components/models/channel/DeleteChannel.svelte";
+    import EditChannel from "$lib/components/models/channel/EditChannel.svelte";
 
 
     interface ServerChannelProps {
@@ -87,5 +88,5 @@
     </a>
 </div>
 
-<!--<EditChannel bind:isEditChannelDialogOpen {channel} serverMembers={members} />-->
-<!--<DeleteChannel bind:isDeleteChannelDialogOpen {channel} />-->
+<EditChannel bind:isEditChannelDialogOpen {channel} serverMembers={members} />
+<DeleteChannel bind:isDeleteChannelDialogOpen {channel} />

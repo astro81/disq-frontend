@@ -28,6 +28,7 @@
     import LeaveServer from "$lib/components/models/server/LeaveServer.svelte";
     import DeleteServer from "$lib/components/models/server/DeleteServer.svelte";
     import ServerSettings from "$lib/components/models/server/ServerSettings.svelte";
+    import ManageMember from "$lib/components/models/server/ManageMember.svelte";
 
 
     type ServerMemberAllProps = {
@@ -169,4 +170,4 @@
 <LeaveServer bind:isLeaveServerDialogOpen currentServer={currServer}/>
 <DeleteServer bind:isDeleteServerDialogOpen currentServer={currServer}/>
 
-<!--<ManageMember bind:isManageMemberDialogOpen currentServer={currServer} {members} {currentMember}/>-->
+<ManageMember bind:isManageMemberDialogOpen currentServer={currServer} {members} {currentMember} />
