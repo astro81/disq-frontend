@@ -1,4 +1,4 @@
-import { command, form, query } from '$app/server';
+import { form, query } from '$app/server';
 import { redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { getCurrentServer } from './current-server.remote';
@@ -7,6 +7,7 @@ import { requireAuth } from '$lib/server/utils/session-checker';
 import { db } from '$lib/server/db';
 import { memberTable, serverTable } from '$lib/server/db/schema';
 import { and, eq, sql } from 'drizzle-orm';
+import { getJoinedServers } from '$lib/remote/server/joined-server.remote';
 
 
 export const getPublicServers = query(async () => {
@@ -73,10 +74,11 @@ export const joinServer = form(z.object({ serverId: z.string() }), async ({ serv
         role: "GUEST"
     });
 
-    await getCurrentServer({ serverId }).refresh();
-	await getPublicServers().refresh();
-	await getCurrentMember({ serverId }).refresh();
-	await getCurrentMemberList({ serverId }).refresh();
+		await getJoinedServers().refresh();
+		await getCurrentServer({ serverId }).refresh();
+		await getPublicServers().refresh();
+		await getCurrentMember({ serverId }).refresh();
+		await getCurrentMemberList({ serverId }).refresh();
 
 	redirect(302, `/servers/${serverId}`);
 });

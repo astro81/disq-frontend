@@ -34,8 +34,6 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 		redirect(303, `/servers/${serverId}`);
 	}
 
-    console.log(currentChannel, member);
-
 	return {
 		currentChannel,
 		currentChannelMember: member
