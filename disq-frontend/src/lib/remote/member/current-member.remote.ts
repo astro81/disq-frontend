@@ -19,7 +19,7 @@ export const getCurrentMember = query(z.object({ serverId: z.string() }), async 
 		where: and(eq(memberTable.serverId, serverId), eq(memberTable.userId, currentUser.id))
 	});
 
-	if (!serverMember) throw new Error('Member not found');
+	if (!serverMember) return null;
 
 	const memberUser = await db.query.user.findFirst({
 		where: eq(user.id, serverMember.userId)

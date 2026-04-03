@@ -21,6 +21,9 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		return getCurrentMember({ serverId });
 	};
 
+	const currentMember = await fetchCurrentMember(serverId);
+	if (!currentMember) redirect(303, '/servers/@me');
+
 	const fetchCurrentServerMembers = async (serverId: string) => {
 		return getCurrentMemberList({ serverId });
 	};

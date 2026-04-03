@@ -12,7 +12,6 @@ import {
 	memberTable,
 	serverTable
 } from '$lib/server/db/schema';
-import { getCurrentServer, getJoinedServers } from '$lib/remote/server/joined-server.remote';
 
 const imageConstraints = UPLOAD_CONSTRAINTS.serverImage;
 // const bannerConstraints = UPLOAD_CONSTRAINTS.serverBanner
@@ -37,17 +36,6 @@ const createServerSchema = 	z.object({
 			(f) => f.size <= imageConstraints.maxBytes,
 			`File too large. Max size is ${imageConstraints.maxLabel}.`
 		),
-	// serverBannerImage: z
-	// 	.file()
-	// 	.refine(
-	// 		(f) => bannerConstraints.allowedTypes.includes(f.type as AllowedBannerType),
-	// 		`Unsupported format. Use ${bannerConstraints.allowedLabel}.`
-	// 	)
-	// 	.refine(
-	// 		(f) => f.size <= bannerConstraints.maxBytes,
-	// 		`File too large. Max size is ${bannerConstraints.maxLabel}.`
-	// 	)
-	// 	.optional()
 })
 
 export const createServer = form(
@@ -55,6 +43,8 @@ export const createServer = form(
 	async ({ serverName, serverDescription, isPrivateServer, serverImage }) => {
 		const user = requireAuth();
 		if (!user) error(401, 'Unauthorized');
+
+		console.log("create-remote", serverName, serverDescription, isPrivateServer, serverImage);
 
 		// Upload server image (required)
 		let serverImageUrl: string;
@@ -69,20 +59,7 @@ export const createServer = form(
 			error(422, err.message ?? 'Failed to upload server image.');
 		}
 
-		// Upload banner image (optional)
-		// let serverBannerImageUrl: string | null = null;
-		// if (serverBannerImage && serverBannerImage.size > 0) {
-		// 	try {
-		// 		const buffer = await serverBannerImage.arrayBuffer();
-		// 		const result = await uploadToCloudinary(buffer, serverBannerImage.type, {
-		// 			folder: bannerConstraints.folder,
-		// 			maxBytes: bannerConstraints.maxBytes
-		// 		});
-		// 		serverBannerImageUrl = result.url;
-		// 	} catch (err: any) {
-		// 		error(422, err.message ?? 'Failed to upload banner image.');
-		// 	}
-		// }
+		console.log("create-remote", serverImageUrl);
 
 		// generate invite code
 		const inviteCode = crypto.randomUUID();
@@ -101,31 +78,34 @@ export const createServer = form(
 				})
 				.returning();
 
+			console.log("create-remote", server);
+
 			newServerId = server.serverId;
 
-			await db.insert(memberTable).values({
+			const [member] = await db.insert(memberTable).values({
 				serverId: server.serverId,
 				userId: user.id,
 				role: memberRoleEnum.enumValues[0] // ADMIN
-			});
+			}).returning();
 
-			await db.insert(channelTable).values({
+			console.log("create-remote", member);
+
+			const [channel] = await db.insert(channelTable).values({
 				channelName: 'general',
 				channelType: channelTypeEnum.enumValues[0], // TEXT
 				position: 1,
 				createdBy: user.id,
 				serverId: server.serverId,
 				isPrivateChannel: false
-			});
+			}).returning();
+
+			console.log('create-remote', channel);
 		} catch (err: any) {
 			if (err.message?.includes('unique')) {
 				error(409, 'A server with that name already exists.');
 			}
 			error(500, 'Failed to create server.');
 		}
-
-		await getJoinedServers().refresh();
-		await getCurrentServer({ serverId: newServerId }).refresh();
 
 		if (newServerId) redirect(303, `/servers/${newServerId}`);
 		else redirect(303, '/server/@me');

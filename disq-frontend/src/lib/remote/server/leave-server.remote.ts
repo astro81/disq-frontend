@@ -2,12 +2,12 @@
 import { form } from "$app/server";
 import { error, redirect } from "@sveltejs/kit";
 import z from "zod";
-import { getCurrentMember, getCurrentMemberList } from "../member/current-member.remote";
-import { getCurrentServer } from "./current-server.remote";
 import { requireAuth } from '$lib/server/utils/session-checker';
 import { db } from '$lib/server/db';
 import { memberTable } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { getPublicServers } from '$lib/remote/server/discover.remote';
+import { getJoinedServers } from '$lib/remote/server/joined-server.remote';
 
 export const leaveServer = form(
 	z.object({
@@ -33,10 +33,8 @@ export const leaveServer = form(
 		if (existingMember)
 			await db.delete(memberTable).where(eq(memberTable.memberId, existingMember.memberId));
 
-		await getCurrentServer({ serverId }).refresh();
-		// await getPublicServers().refresh();
-		await getCurrentMember({ serverId }).refresh();
-		await getCurrentMemberList({ serverId }).refresh();
+		await getPublicServers().refresh();
+		await getJoinedServers().refresh();
 
 		redirect(303, "/servers/@me");
 	}

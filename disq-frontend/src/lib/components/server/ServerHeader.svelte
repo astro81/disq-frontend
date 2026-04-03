@@ -20,13 +20,6 @@
     import DropdownMenuContent from "$lib/components/ui/dropdown-menu/dropdown-menu-content.svelte";
     import DropdownMenuSeparator from "$lib/components/ui/dropdown-menu/dropdown-menu-separator.svelte";
 
-    // import InviteMember from "../models/servers/InviteMember.svelte";
-    // import ServerSettings from "../models/servers/ServerSettings.svelte";
-    // import CreateChannel from "../models/channels/CreateChannel.svelte";
-    // import LeaveServer from "../models/servers/LeaveServer.svelte";
-    // import DeleteServer from "../models/servers/DeleteServer.svelte";
-    // import ManageMember from "../models/servers/ManageMember.svelte";
-
     import { getCurrentServer } from "$lib/remote/server/current-server.remote";
     import { page } from "$app/state";
 
