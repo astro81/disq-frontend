@@ -30,7 +30,7 @@
 <div class="flex h-full">
 	<!-- Friends sidebar -->
 	<aside
-		class="flex w-64 flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
+		class="flex h-screen w-64 flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
 	>
 		<div class="flex h-12 items-center border-b border-zinc-200 px-4 dark:border-zinc-800">
 			<Users class="mr-2 size-4 text-zinc-500" />

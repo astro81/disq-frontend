@@ -14,11 +14,25 @@ export type DmWSMessage = {
     userProfileImage?: string | null
     userBannerImage?: string | null
 
+    // File metadata
+    messageFileUrl?: string | null
+    messageFileName?: string | null
+    messageFileSize?: number | null
+    messageFileType?: string | null
+
     // for history messages loaded from DB
     createdAt?: string
 }
 
 export type DmSocketState = 'connecting' | 'open' | 'closed' | 'error'
+
+export interface FileAttachment {
+    url: string;
+    publicId: string;
+    name: string;
+    size: number;
+    mimeType: string;
+}
 
 
 // Global reactive state using runes
@@ -77,6 +91,10 @@ export async function loadDmHistory(conversationId: string, cursor?: string) {
                 displayName: string | null
                 userProfileImage: string | null
                 userBannerImage: string | null
+                messageFileUrl?: string | null
+                messageFileName?: string | null
+                messageFileSize?: number | null
+                messageFileType?: string | null
                 createdAt: string
             }[]
             nextCursor: string | null
@@ -93,6 +111,11 @@ export async function loadDmHistory(conversationId: string, cursor?: string) {
             displayName: m.displayName ?? m.username,
             userProfileImage: m.userProfileImage,
             userBannerImage: m.userBannerImage,
+
+            messageFileUrl: m.messageFileUrl,
+            messageFileName: m.messageFileName,
+            messageFileSize: m.messageFileSize,
+            messageFileType: m.messageFileType,
 
             timestamp: new SvelteDate(m.createdAt).getTime(),
             createdAt: m.createdAt,
@@ -187,5 +210,35 @@ export function disconnectDm() {
 export function sendDmMessage(text: string) {
     if (dmSocket?.readyState === WebSocket.OPEN) {
         dmSocket.send(JSON.stringify({ text }))
+    }
+}
+
+export function sendDmFile(file: FileAttachment) {
+    if (dmSocket?.readyState === WebSocket.OPEN) {
+        dmSocket.send(
+            JSON.stringify({
+                text: '',
+                fileUrl: file.url,
+                fileName: file.name,
+                filePublicId: file.publicId,
+                fileSize: file.size,
+                fileType: file.mimeType
+            })
+        );
+    }
+}
+
+export function sendDmMessageWithFile(text: string, file: FileAttachment) {
+    if (dmSocket?.readyState === WebSocket.OPEN) {
+        dmSocket.send(
+            JSON.stringify({
+                text,
+                fileUrl: file.url,
+                fileName: file.name,
+                filePublicId: file.publicId,
+                fileSize: file.size,
+                fileType: file.mimeType
+            })
+        );
     }
 }

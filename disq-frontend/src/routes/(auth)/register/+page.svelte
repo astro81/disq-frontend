@@ -69,7 +69,6 @@
                     <div class="w-full flex flex-col gap-2">
                         {@render socialSignUp({action: "?/signUpGoogle", provider: "Google" })}
                         {@render socialSignUp({action: "?/signUpGithub", provider: "Github" })}
-                        {@render socialSignUp({action: "?/signUpDiscord", provider: "Discord"})}
                     </div>
 
                 </CardContent>
