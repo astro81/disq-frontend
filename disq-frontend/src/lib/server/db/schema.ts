@@ -20,3 +20,10 @@ export {
 	conversationTable,
 	directMessageTable
 } from '$lib/server/db/chat';
+
+export {
+	friendshipTable,
+	dmConversationTable,
+	dmMessageTable,
+	friendshipStatusEnum
+} from '$lib/server/db/friendship';

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
+	import { UserPlus } from '@lucide/svelte';
 
 	interface Props {
 		memberId: string;
@@ -46,6 +47,44 @@
 	function copyToClipboard(text: string) {
 		navigator.clipboard.writeText(text).catch(() => null);
 	}
+
+	// ── Add Friend logic ──
+	let friendRequestState = $state<'idle' | 'loading' | 'sent' | 'already' | 'error'>('idle');
+
+	async function handleAddFriend() {
+		if (friendRequestState === 'loading' || friendRequestState === 'sent') return;
+		friendRequestState = 'loading';
+
+		try {
+			const res = await fetch('/api/friends?action=request', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ addresseeId: userId })
+			});
+
+			if (res.ok) {
+				friendRequestState = 'sent';
+			} else if (res.status === 409) {
+				friendRequestState = 'already';
+			} else {
+				friendRequestState = 'error';
+			}
+		} catch {
+			friendRequestState = 'error';
+		}
+	}
+
+	const friendButtonLabel = $derived(
+		friendRequestState === 'loading'
+			? 'Sending...'
+			: friendRequestState === 'sent'
+				? 'Request Sent!'
+				: friendRequestState === 'already'
+					? 'Already Friends'
+					: friendRequestState === 'error'
+						? 'Error'
+						: 'Add Friend'
+	);
 </script>
 
 <Popover.Root>
@@ -56,7 +95,9 @@
 	<Popover.Content class="w-72 overflow-hidden p-0" side="right" align="start" sideOffset={8}>
 		<!-- Banner / header gradient -->
 		<div class="h-16 bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500">
-			<img src={userBannerImage} alt={displayName} />
+			{#if userBannerImage}
+				<img src={userBannerImage} alt={displayName} class="h-full w-full object-cover" />
+			{/if}
 		</div>
 
 		<!-- Avatar overlapping banner -->
@@ -92,6 +133,22 @@
 					</span>
 				{/if}
 			</div>
+
+			<!-- Add Friend button (hidden for self) -->
+			{#if !isLocal}
+				<button
+					onclick={handleAddFriend}
+					disabled={friendRequestState === 'loading' ||
+						friendRequestState === 'sent' ||
+						friendRequestState === 'already'}
+					class="flex w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-1.5
+						text-xs font-medium text-white transition-colors hover:bg-indigo-700
+						disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					<UserPlus class="size-3.5" />
+					{friendButtonLabel}
+				</button>
+			{/if}
 
 			<div class="h-px bg-border"></div>
 

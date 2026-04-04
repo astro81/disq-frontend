@@ -1,56 +1,65 @@
 <!-- lib/components/navigation/NaviagtionSidebar -->
 <script lang="ts">
-    import { page } from "$app/state";
+	import { page } from '$app/state';
 
-    import {getJoinedServers} from "$lib/remote/server/joined-server.remote";
+	import { getJoinedServers } from '$lib/remote/server/joined-server.remote';
 
-    import ModeToggleButton from "$lib/components/ModeToggleButton.svelte";
+	import ModeToggleButton from '$lib/components/ModeToggleButton.svelte';
 
-    import Separator from "$lib/components/ui/separator/separator.svelte";
-    import ScrollArea from "$lib/components/ui/scroll-area/scroll-area.svelte";
+	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 
-    import { Compass, UserRound } from "@lucide/svelte";
+	import { Compass, UserRound, Users } from '@lucide/svelte';
 
-    import NavigationLink from "$lib/components/navigation/NavigationLink.svelte";
+	import NavigationLink from '$lib/components/navigation/NavigationLink.svelte';
 
-    import CreateServer from "$lib/components/models/server/CreateServer.svelte";
-    import NavigationItem from "./NavigationItem.svelte";
+	import CreateServer from '$lib/components/models/server/CreateServer.svelte';
+	import NavigationItem from './NavigationItem.svelte';
 
-    // joinedServers comes from remote function
-    let joinedServers = $derived(await getJoinedServers());
+	// joinedServers comes from remote function
+	let joinedServers = $derived(await getJoinedServers());
 </script>
-<div class="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1e1f22] bg-sidebar-border py-3">
 
-    <NavigationLink href="/servers/@me" label="Me">
-        {#snippet icon()}
-            <UserRound size="25" />
-        {/snippet}
-    </NavigationLink>
+<div
+	class="flex h-full w-full flex-col items-center space-y-4 bg-sidebar-border py-3 text-primary dark:bg-[#1e1f22]"
+>
+	<NavigationLink href="/servers/@me" label="Me">
+		{#snippet icon()}
+			<UserRound size="25" />
+		{/snippet}
+	</NavigationLink>
 
-    <CreateServer />
+	<NavigationLink href="/servers/friends" label="Friends">
+		{#snippet icon()}
+			<Users size="25" />
+		{/snippet}
+	</NavigationLink>
 
-    <NavigationLink href="/servers/discovery" label="Explore">
-        {#snippet icon()}
-            <Compass size="25" />
-        {/snippet}
-    </NavigationLink>
+	<CreateServer />
 
-    <Separator class="h-0.5 bg-zinc-300 dark:bg-zinc-700 rounded-md w-10! mx-auto"/>
+	<NavigationLink href="/servers/discovery" label="Explore">
+		{#snippet icon()}
+			<Compass size="25" />
+		{/snippet}
+	</NavigationLink>
 
-    <ScrollArea class="w-full h-[60dvh]">
-        {#each joinedServers as server (server.serverId)}
-            <div class="mb-4">
-                <NavigationItem
-                        serverId={server.serverId}
-                        serverName={server.serverName}
-                        serverImageUrl={server.serverImageUrl}/>
-            </div>
-        {/each}
-    </ScrollArea>
+	<Separator class="mx-auto h-0.5 w-10! rounded-md bg-zinc-300 dark:bg-zinc-700" />
 
-    <div class="pb-3 mt-auto flex items-center flex-col gap-y-4">
-        <ModeToggleButton />
+	<ScrollArea class="h-[60dvh] w-full">
+		{#each joinedServers as server (server.serverId)}
+			<div class="mb-4">
+				<NavigationItem
+					serverId={server.serverId}
+					serverName={server.serverName}
+					serverImageUrl={server.serverImageUrl}
+				/>
+			</div>
+		{/each}
+	</ScrollArea>
 
-        <!-- <UserButton /> -->
-    </div>
+	<div class="mt-auto flex flex-col items-center gap-y-4 pb-3">
+		<ModeToggleButton />
+
+		<!-- <UserButton /> -->
+	</div>
 </div>
