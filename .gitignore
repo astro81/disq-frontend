@@ -3,8 +3,8 @@
 
 # Env
 .env
-.env.*
-!.env.example
+disq/.env.example
+!disq/.env.example
 !.env.test
 # Local Netlify folder
 .netlify

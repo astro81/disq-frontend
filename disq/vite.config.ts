@@ -1,11 +1,10 @@
-import devtoolsJson from 'vite-plugin-devtools-json';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
+	plugins: [tailwindcss(), sveltekit()],
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
@@ -33,8 +32,5 @@ export default defineConfig({
 				}
 			}
 		]
-	},
-	ssr: {
-		noExternal: ['gsap']
 	}
 });

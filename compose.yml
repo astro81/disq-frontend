@@ -1,0 +1,7 @@
+services:
+  app:
+    build: ./disq
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./disq/.env                                                                                                                                                                      
