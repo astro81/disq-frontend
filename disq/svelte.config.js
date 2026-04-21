@@ -1,7 +1,7 @@
-import adapter from '@sveltejs/adapter-node';
+// import adapter from '@sveltejs/adapter-node';
 
 // todo: change to netlify adapter for production
-// import adapter from '@sveltejs/adapter-netlify';
+import adapter from '@sveltejs/adapter-netlify';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
