@@ -9,6 +9,8 @@ RUN bun install --frozen-lockfile --ignore-scripts
 # Build
 FROM deps AS builder
 COPY . .
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 RUN bun run build
 
 # Production image

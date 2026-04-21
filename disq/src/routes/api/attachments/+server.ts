@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types';
-import { API_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { error } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request, locals, fetch }) => {
@@ -13,7 +13,7 @@ export const POST: RequestHandler = async ({ request, locals, fetch }) => {
 	const outgoing = new FormData();
 	outgoing.append('file', file);
 
-	const res = await fetch(`${API_URL}/api/attachments`, {
+	const res = await fetch(`${env.API_URL}/api/attachments`, {
 		method: 'POST',
 		headers: { 'x-user-id': userId },
 		body: outgoing,

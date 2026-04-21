@@ -1,10 +1,16 @@
 <!-- DmChatMessages.svelte -->
 <script lang="ts">
-	import { dmMessages, dmHistoryState, loadMoreDmHistory } from '$lib/stores/dm-socket.svelte';
+	import {
+		dmMessages,
+		dmHistoryState,
+		loadMoreDmHistory,
+		deleteDmMessage
+	} from '$lib/stores/dm-socket.svelte';
 	import { Loader, FileIcon, Download } from '@lucide/svelte';
 	import { SvelteDate } from 'svelte/reactivity';
 	import { resolve } from '$app/paths';
 	import CodeBlock from '../snippet/CodeBlock.svelte';
+	import MessageContextMenu from './MessageContextMenu.svelte';
 
 	interface Props {
 		currentUserId: string;
@@ -17,6 +23,34 @@
 	let scrollContainer: HTMLDivElement | undefined = $state();
 	let prevMessageCount = $state(0);
 	let initialScrollDone = $state(false);
+
+	// Context menu state
+	let contextMenu = $state<{
+		show: boolean;
+		x: number;
+		y: number;
+		messageText: string;
+		messageId: string | null;
+		isMine: boolean;
+	}>({ show: false, x: 0, y: 0, messageText: '', messageId: null, isMine: false });
+
+	function showContextMenu(e: MouseEvent, msg: (typeof dmMessages.current)[0], isMine: boolean) {
+		e.preventDefault();
+		contextMenu = {
+			show: true,
+			x: e.clientX,
+			y: e.clientY,
+			messageText: msg.message,
+			messageId: msg.dmMessageId,
+			isMine
+		};
+	}
+
+	function handleDeleteMessage() {
+		if (contextMenu.messageId) {
+			deleteDmMessage(contextMenu.messageId);
+		}
+	}
 
 	$effect(() => {
 		const count = dmMessages.current.length;
@@ -224,7 +258,12 @@
 						{@const snippet = parseCodeSnippet(msg.message)}
 						{@const hasText = !!msg.message && !snippet}
 
-						<div class="flex flex-col {isMine ? 'items-end' : 'items-start'}">
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<div
+							class="flex flex-col {isMine ? 'items-end' : 'items-start'}"
+							oncontextmenu={(e) => showContextMenu(e, msg, isMine)}
+							ondblclick={(e) => showContextMenu(e, msg, isMine)}
+						>
 							{#if hasFile}
 								{#if isImageFile}
 									<div
@@ -355,3 +394,14 @@
 
 	<div bind:this={bottomEl}></div>
 </div>
+
+{#if contextMenu.show}
+	<MessageContextMenu
+		x={contextMenu.x}
+		y={contextMenu.y}
+		messageText={contextMenu.messageText}
+		isMine={contextMenu.isMine}
+		onDelete={handleDeleteMessage}
+		onClose={() => (contextMenu.show = false)}
+	/>
+{/if}

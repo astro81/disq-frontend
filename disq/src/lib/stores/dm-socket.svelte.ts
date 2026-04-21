@@ -1,16 +1,18 @@
 import { SvelteDate, SvelteURLSearchParams } from "svelte/reactivity"
 
 export type DmWSMessage = {
+    type?: 'MESSAGE' | 'DELETE_MESSAGE'
     dmMessageId: string | null
+    messageId?: string | null // Alias for deletion events
     conversationId: string
-    userId: string
+    userId?: string
 
-    message: string
+    message?: string
 
     timestamp: number
 
-    username: string
-    displayName: string
+    username?: string
+    displayName?: string
     userProfileImage?: string | null
     userBannerImage?: string | null
 
@@ -188,6 +190,12 @@ export function connectToDm(conversationId: string, userInfo: {
         try {
             const data: DmWSMessage = JSON.parse(event.data)
 
+            if (data.type === 'DELETE_MESSAGE') {
+                const targetId = data.messageId || data.dmMessageId;
+                _dmMessages = _dmMessages.filter(m => m.dmMessageId !== targetId)
+                return
+            }
+
             // avoid double-rendering your own confirmed message
             _dmMessages = _dmMessages.some(m => m.dmMessageId && m.dmMessageId === data.dmMessageId)
                 ? _dmMessages
@@ -240,5 +248,26 @@ export function sendDmMessageWithFile(text: string, file: FileAttachment) {
                 fileType: file.mimeType
             })
         );
+    }
+}
+
+/** Delete a DM message by its ID (soft-delete via API, then remove from local state) */
+export async function deleteDmMessage(dmMessageId: string) {
+    if (!currentConversationId || !dmMessageId) return
+
+    try {
+        const res = await fetch(`/api/dm-messages/${currentConversationId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messageId: dmMessageId })
+        })
+
+        if (res.ok) {
+            _dmMessages = _dmMessages.filter(m => m.dmMessageId !== dmMessageId)
+        } else {
+            console.error('[DM-WS] Failed to delete DM message:', res.status)
+        }
+    } catch (e) {
+        console.error('[DM-WS] Failed to delete DM message:', e)
     }
 }

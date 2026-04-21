@@ -1,12 +1,13 @@
 import { SvelteDate, SvelteURLSearchParams } from "svelte/reactivity"
 
 export type WSMessage = {
+	type?: 'MESSAGE' | 'DELETE_MESSAGE'
 	messageId: string | null
 	channelId: string
-	memberId: string
-	userId: string
+	memberId?: string
+	userId?: string
 
-	message: string
+	message?: string
 
 	// File attachment (optional)
 	messageFileUrl?: string | null
@@ -16,8 +17,8 @@ export type WSMessage = {
 
 	timestamp: number
 
-	username: string
-	displayName: string
+	username?: string
+	displayName?: string
 	userProfileImage?: string | null
 	userBannerImage?: string | null
 
@@ -213,6 +214,11 @@ export function connectToChannel(channelId: string, member: {
 		try {
 			const data: WSMessage = JSON.parse(event.data)
 
+			if (data.type === 'DELETE_MESSAGE') {
+				_messages = _messages.filter(m => m.messageId !== data.messageId)
+				return
+			}
+
 			// avoid double-rendering your own confirmed message
 			_messages = _messages.some(m => m.messageId && m.messageId === data.messageId)
 				? _messages
@@ -276,3 +282,23 @@ export function sendMessageWithFile(text: string, file?: FileAttachment) {
 	})
 }
 
+/** Delete a message by its ID (soft-delete via API, then remove from local state) */
+export async function deleteMessage(messageId: string) {
+	if (!currentChannelId || !messageId) return
+
+	try {
+		const res = await fetch(`/api/messages/${currentChannelId}`, {
+			method: 'DELETE',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ messageId })
+		})
+
+		if (res.ok) {
+			_messages = _messages.filter(m => m.messageId !== messageId)
+		} else {
+			console.error('[WS] Failed to delete message:', res.status)
+		}
+	} catch (e) {
+		console.error('[WS] Failed to delete message:', e)
+	}
+}
