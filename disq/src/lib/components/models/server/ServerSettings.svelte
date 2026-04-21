@@ -214,13 +214,13 @@
                         />
 
                         {#if serverImagePreview}
-                            <div class="relative w-20 h-20 rounded-full overflow-hidden bg-muted">
+                            <div class="relative w-20 h-60 rounded-xl overflow-hidden bg-muted">
                                 <img src={serverImagePreview} alt="Server preview" class="w-full h-full object-cover" />
                                 <button
                                         type="button"
                                         onclick={removeServerImage}
                                         class="absolute inset-0 flex items-center justify-center
-                                       bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-full"
+                                       bg-black/50 opacity-0 hover:opacity-100 transition-opacity"
                                         aria-label="Remove image"
                                 >
                                     <Trash2 class="size-4 text-white" />
@@ -269,13 +269,13 @@
                         />
 
                         {#if bannerImagePreview}
-                            <div class="relative w-20 h-20 rounded-full overflow-hidden bg-muted">
+                            <div class="relative w-20 h-60 rounded-xl overflow-hidden bg-muted">
                                 <img src={bannerImagePreview} alt="Server preview" class="w-full h-full object-cover"/>
                                 <button
                                         type="button"
                                         onclick={removeBannerImage}
                                         class="absolute inset-0 flex items-center justify-center
-                                                           bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-full"
+                                                           bg-black/50 opacity-0 hover:opacity-100 transition-opacity"
                                         aria-label="Remove image"
                                 >
                                     <Trash2 class="size-4 text-white"/>

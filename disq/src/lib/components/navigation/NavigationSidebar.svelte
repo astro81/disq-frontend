@@ -10,6 +10,7 @@
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 
 	import { Compass, UserRound, Users } from '@lucide/svelte';
+	import { pendingFriendRequests } from '$lib/stores/notification.svelte';
 
 	import NavigationLink from '$lib/components/navigation/NavigationLink.svelte';
 
@@ -31,7 +32,16 @@
 
 	<NavigationLink href="/servers/friends" label="Friends">
 		{#snippet icon()}
-			<Users size="25" />
+			<div class="relative">
+				<Users size="25" />
+				{#if pendingFriendRequests.count > 0}
+					<div
+						class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-zinc-900"
+					>
+						{pendingFriendRequests.count > 9 ? '9+' : pendingFriendRequests.count}
+					</div>
+				{/if}
+			</div>
 		{/snippet}
 	</NavigationLink>
 

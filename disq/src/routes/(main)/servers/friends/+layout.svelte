@@ -4,12 +4,20 @@
 	import { Users, Check, X, Bell } from '@lucide/svelte';
 	import { invalidateAll } from '$app/navigation';
 	import UserSearch from '$lib/components/friend/UserSearch.svelte';
+	import { pendingFriendRequests } from '$lib/stores/notification.svelte';
 
 	let { data, children }: LayoutProps = $props();
 
 	let friends = $derived(data.friends);
 	let pendingRequests = $derived(data.pendingRequests);
 	let currentFriendId = $derived(page.params.friendId);
+
+	// Sync global pending count with current data
+	$effect(() => {
+		if (pendingRequests) {
+			pendingFriendRequests.count = pendingRequests.length;
+		}
+	});
 
 	async function handleAction(friendshipId: string, action: 'accept' | 'reject') {
 		try {
