@@ -80,10 +80,9 @@
 		</kbd>
 	</button>
 
-	<Command.Dialog bind:open>
+	<Command.Dialog bind:open shouldFilter={false}>
 		<div class="flex items-center border-b px-3">
-			<Search class="mr-2 size-4 shrink-0 opacity-50" />
-			<input
+			<Command.Input
 				bind:value={query}
 				placeholder="Search by username..."
 				class="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -100,7 +99,10 @@
 			{#if results.length > 0}
 				<Command.Group heading="Global Search">
 					{#each results as user (user.id)}
-						<div class="flex items-center justify-between px-2 py-1.5 text-sm outline-none">
+						<Command.Item
+							value={user.name}
+							class="flex items-center justify-between px-2 py-1.5 text-sm outline-none"
+						>
 							<div class="flex items-center gap-2">
 								<Avatar.Root class="size-8">
 									<Avatar.Image src={user.image} alt={user.displayName} />
@@ -127,7 +129,7 @@
 									Add
 								{/if}
 							</button>
-						</div>
+						</Command.Item>
 					{/each}
 				</Command.Group>
 			{/if}

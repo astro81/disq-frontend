@@ -140,3 +140,27 @@ export const searchUsers = query(
         return users ?? [];
     }
 );
+
+// Remove a friend
+export const removeFriend = query(
+    z.object({ friendshipId: z.string() }),
+    async ({ friendshipId }) => {
+        const currentUser = requireAuth();
+
+        if (!friendshipId) return { success: false };
+
+        await db
+            .delete(friendshipTable)
+            .where(
+                and(
+                    eq(friendshipTable.friendshipId, friendshipId),
+                    or(
+                        eq(friendshipTable.requesterId, currentUser.id),
+                        eq(friendshipTable.addresseeId, currentUser.id)
+                    )
+                )
+            );
+
+        return { success: true };
+    }
+);

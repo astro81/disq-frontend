@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { LayoutProps } from './$types';
 	import { page } from '$app/state';
-	import { Users, Check, X, Bell } from '@lucide/svelte';
+	import { Users, Check, X, Bell, Trash2 } from '@lucide/svelte';
 	import { invalidateAll } from '$app/navigation';
 	import UserSearch from '$lib/components/friend/UserSearch.svelte';
+	import { removeFriend } from '$lib/remote/friend/friend.remote';
 	import { pendingFriendRequests } from '$lib/stores/notification.svelte';
 
 	let { data, children }: LayoutProps = $props();
@@ -31,6 +32,19 @@
 			}
 		} catch (e) {
 			console.error(`Failed to ${action} friend request:`, e);
+		}
+	}
+
+	async function handleRemoveFriend(friendshipId: string) {
+		if (!confirm('Are you sure you want to remove this friend?')) return;
+
+		try {
+			const res = await removeFriend({ friendshipId });
+			if (res.success) {
+				await invalidateAll();
+			}
+		} catch (e) {
+			console.error('Failed to remove friend:', e);
 		}
 	}
 </script>
@@ -138,6 +152,18 @@
 							<p class="truncate text-sm font-medium">{friend.friendDisplayName}</p>
 							<p class="truncate text-xs text-muted-foreground">@{friend.friendUsername}</p>
 						</div>
+
+						<button
+							onclick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								handleRemoveFriend(friend.friendshipId);
+							}}
+							class="invisible rounded-md p-1.5 text-zinc-500 transition-colors group-hover:visible hover:bg-zinc-300 hover:text-red-500 dark:hover:bg-zinc-600"
+							title="Remove Friend"
+						>
+							<Trash2 class="size-3.5" />
+						</button>
 					</a>
 				{/each}
 			{/if}

@@ -150,48 +150,6 @@
 				</button>
 			{/if}
 
-			<div class="h-px bg-border"></div>
-
-			<!-- IDs -->
-			<div class="flex flex-col gap-2">
-				<button
-					onclick={() => copyToClipboard(userId)}
-					class="group flex items-center justify-between rounded-md px-2 py-1.5
-                           text-left transition-colors hover:bg-muted"
-					title="Click to copy"
-				>
-					<div>
-						<p class="text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-							User ID
-						</p>
-						<p class="max-w-45 truncate font-mono text-xs">{userId}</p>
-					</div>
-					<span
-						class="text-[10px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-					>
-						Copy
-					</span>
-				</button>
-
-				<button
-					onclick={() => copyToClipboard(memberId)}
-					class="group flex items-center justify-between rounded-md px-2 py-1.5
-                           text-left transition-colors hover:bg-muted"
-					title="Click to copy"
-				>
-					<div>
-						<p class="text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-							Member ID
-						</p>
-						<p class="max-w-45 truncate font-mono text-xs">{memberId}</p>
-					</div>
-					<span
-						class="text-[10px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-					>
-						Copy
-					</span>
-				</button>
-			</div>
 		</div>
 	</Popover.Content>
 </Popover.Root>

@@ -54,6 +54,7 @@ export const getFriendUser = query(
                 displayName: true,
                 image: true,
                 profileBannerImage: true,
+                email: true,
             },
             where: eq(user.id, friendUserId)
         });
