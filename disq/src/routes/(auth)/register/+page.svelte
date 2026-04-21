@@ -1,4 +1,3 @@
-<!-- (auth)/register -->
 <script lang="ts">
     import type { ActionData } from "./$types";
     import { resolve } from "$app/paths";

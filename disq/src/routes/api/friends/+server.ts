@@ -2,7 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
 
-// POST /api/friends — proxy friend actions to backend
+// POST /api/friends - proxy friend actions to backend
 export const POST: RequestHandler = async ({ request, url, locals }) => {
     const userId = locals.user?.id;
     if (!userId) error(401, 'Unauthorized');
@@ -40,7 +40,7 @@ export const POST: RequestHandler = async ({ request, url, locals }) => {
     return json(await res.json());
 };
 
-// DELETE /api/friends?friendshipId=xxx — remove a friendship
+// DELETE /api/friends?friendshipId=xxx - remove a friendship
 export const DELETE: RequestHandler = async ({ url, locals }) => {
     const userId = locals.user?.id;
     if (!userId) error(401, 'Unauthorized');
@@ -60,7 +60,7 @@ export const DELETE: RequestHandler = async ({ url, locals }) => {
     return json(await res.json());
 };
 
-// GET /api/friends?type=status&targetUserId=xxx — check friendship status
+// GET /api/friends?type=status&targetUserId=xxx - check friendship status
 export const GET: RequestHandler = async ({ url, locals }) => {
     const userId = locals.user?.id;
     if (!userId) error(401, 'Unauthorized');

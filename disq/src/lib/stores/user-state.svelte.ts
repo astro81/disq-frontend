@@ -1,4 +1,3 @@
-// lib/stores/user-state.svelte.ts
 import { getContext, setContext } from 'svelte';
 
 export type User = {
@@ -43,15 +42,3 @@ export function getUserState(): UserState {
 	if (!state) throw new Error('UserState context not found. Did you call setUserState()?');
 	return state;
 }
-
-// const userState = setUserState();
-// simulate login
-// userState.add({
-// userId: "123",
-// email: "dev@example.com",
-// displayName: "Shadow Hatake",
-// profileImageUrl: null // no image yet
-// });
-
-// const userState = getUserState();
-// <p>Welcome, {userState.user.displayName}!</p>

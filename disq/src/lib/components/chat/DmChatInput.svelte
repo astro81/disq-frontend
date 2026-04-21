@@ -1,4 +1,3 @@
-<!-- DmChatInput.svelte -->
 <script lang="ts">
 	import {
 		sendDmMessage,
@@ -33,7 +32,7 @@
 
 	/**
 	 * POST the raw File to /api/attachments and stage the response
-	 * as a `pendingFile` — it will be sent with the next message.
+	 * as a `pendingFile` - it will be sent with the next message.
 	 */
 	async function handleFileUpload(file: File): Promise<void> {
 		fileUploading = true;
@@ -107,10 +106,10 @@
 	}
 
 	/**
-	 * Primary send handler — decides which path to take:
-	 *   • file + text  - sendMessageWithFile
-	 *   • file only    - handleSendFile
-	 *   • text only    - handleSend
+	 * Primary send handler - decides which path to take:
+	 *   • file + text - sendMessageWithFile
+	 *   • file only - handleSendFile
+	 *   • text only - handleSend
 	 */
 	function handleSubmit() {
 		if (!isConnected) return;

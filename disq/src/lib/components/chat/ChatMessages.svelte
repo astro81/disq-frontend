@@ -1,4 +1,3 @@
-<!-- ChatMessages.svelte -->
 <script lang="ts">
 	import {
 		messages,
@@ -118,14 +117,14 @@
 		return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 	}
 
-	// ── Code snippet detection ─────────────────────────────────────────────────
+	// Code snippet detection
 	function parseCodeSnippet(
 		text: string
 	): { code: string; language: string; theme: string } | null {
 		// Matches: ```lang theme:some-theme\n...code...\n```
-		//   group 1 → language (required)
-		//   group 2 → theme value after "theme:" (optional)
-		//   group 3 → code body
+		// language (required)
+		// theme value after "theme:" (optional)
+		// code body
 
 		// const match = text.trim().match(/^```(\w*)\n([\s\S]*?)```$/)
 		const match = text.trim().match(/^```(\w+)(?:\s+theme:([\w-]+))?\n([\s\S]*?)```$/);
@@ -360,7 +359,7 @@
 								{/if}
 							{/if}
 
-							<!-- ── Code snippet ── -->
+							<!-- Code snippet -->
 							{#if snippet}
 								<div class="w-full min-w-64">
 									<CodeBlock
@@ -372,7 +371,7 @@
 								</div>
 							{/if}
 
-							<!-- ── Plain text bubble ── -->
+							<!--  Plain text bubble -->
 							{#if hasText}
 								<div
 									class="px-4 py-2 text-sm leading-relaxed

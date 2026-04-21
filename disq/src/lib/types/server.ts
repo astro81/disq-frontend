@@ -41,27 +41,3 @@ export type MemberProps = {
 	updatedAt: Date;
 };
 
-// export interface ServerMemberProps {
-//     memberId: string;
-//     role: ServerMemberRole;
-//     userId: string;
-//     serverId: string;
-//     createdAt: Date;
-//     updatedAt: Date;
-// }
-
-// export type ServerMemberAllProps = {
-//     memberId: string;
-//     role: "ADMIN" | "MODERATOR" | "GUEST";
-//     userId: string | null;
-//     username: string | null;
-//     userProfileImage: string | null;
-//     userDisplayName: string | null;
-//     userEmail: string | null;
-//     joinedAt: Date;
-// };
-
-// export interface ServerResponseProps {
-//     server: ServerProps;
-//     member: ServerMemberProps;
-// }

@@ -3,7 +3,7 @@ import { SvelteDate, SvelteURLSearchParams } from "svelte/reactivity"
 export type DmWSMessage = {
     type?: 'MESSAGE' | 'DELETE_MESSAGE'
     dmMessageId: string | null
-    messageId?: string | null // Alias for deletion events
+    messageId?: string | null
     conversationId: string
     userId?: string
 

@@ -1,4 +1,3 @@
-<!-- src/lib/components/notifications/NotificationToast.svelte -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { notifications, type AppNotification } from '$lib/stores/notification.svelte';

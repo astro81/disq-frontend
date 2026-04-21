@@ -1,10 +1,4 @@
 <!-- CodeBlock.svelte -->
-<!--
-    Renders a fenced code block with Shiki syntax highlighting.
-    Uses a lazy highlight strategy:
-      - Shows the raw code immediately (no flash of unstyled content)
-      - Replaces it with the highlighted HTML once Shiki resolves
--->
 <script lang="ts">
 	import { Copy, Check } from '@lucide/svelte';
 	import { highlightCode, PRELOADED_LANGS } from '$lib/utils/shiki';
@@ -139,12 +133,6 @@
 	<!-- Code area -->
 	<div class="overflow-x-auto text-[13px] leading-6">
 		{#if highlightedHtml}
-			<!--
-                Shiki outputs a full <pre><code>…</code></pre> with inline styles.
-                We override its background to stay transparent so our own
-                background (set on the outer div) shows through correctly in both
-                light and dark modes.
-            -->
 			<div class="shiki-wrapper {isMine ? 'shiki-mine' : ''}">
 				{@html highlightedHtml}
 			</div>
@@ -160,7 +148,6 @@
 </div>
 
 <style>
-	/* Strip Shiki's own background so our container bg shows through */
 	.shiki-wrapper :global(pre) {
 		background: transparent !important;
 		margin: 0;
@@ -175,11 +162,6 @@
 		line-height: 1.5rem;
 	}
 
-	/*
-     * When the snippet is inside an "own" (indigo) bubble,
-     * force all Shiki token colors to a light variant so they stay
-     * readable on the dark indigo background.
-     */
 	.shiki-mine :global(.shiki) {
 		color: #c9d1d9 !important; /* github-dark baseline */
 	}

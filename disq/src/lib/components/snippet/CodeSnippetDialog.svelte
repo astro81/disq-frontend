@@ -42,7 +42,6 @@
             selectedLang = 'typescript';
             selectedTheme = mode.current === 'light' ? 'catppuccin-latte' : 'tokyo-night';
 
-            // shadcn Dialog handles focus trapping, but we want the textarea specifically
             setTimeout(() => textareaEl?.focus(), 50);
         }
     });

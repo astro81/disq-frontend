@@ -1,4 +1,3 @@
-<!-- MessageContextMenu.svelte -->
 <script lang="ts">
 	import { Copy, Trash2 } from '@lucide/svelte';
 

@@ -3,7 +3,7 @@ import { env } from '$env/dynamic/private';
 import { error } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request, locals, fetch }) => {
-	const userId = locals.user?.id;  // however you store the current user in locals
+	const userId = locals.user?.id;  
 	if (!userId) error(401, 'Unauthorized');
 
 	const formData = await request.formData();

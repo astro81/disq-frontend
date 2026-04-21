@@ -248,9 +248,7 @@
 				</button>
 			</div>
 
-			<!-- note ref kept so the GSAP timeline doesn't break -->
 			<p bind:this={note} class="mt-4 text-sm text-muted-foreground opacity-0">
-				<!-- intentionally empty / add note text here if needed -->
 			</p>
 		</div>
 	</div>

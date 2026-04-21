@@ -48,7 +48,7 @@
 		navigator.clipboard.writeText(text).catch(() => null);
 	}
 
-	// ── Add Friend logic ──
+	// Add Friend logic
 	let friendRequestState = $state<'idle' | 'loading' | 'sent' | 'already' | 'error'>('idle');
 
 	async function handleAddFriend() {

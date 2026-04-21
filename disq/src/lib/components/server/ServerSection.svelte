@@ -4,7 +4,6 @@
     import { Plus, Settings } from "@lucide/svelte";
     import CreateChannel from "$lib/components/models/channel/CreateChannel.svelte";
 
-    // import ManageMember from "$lib/componen/ts/modals/server/ManageMember.svelte";
 
     interface ServerSectionProps {
         sectionType: "channels" | "members";
@@ -53,4 +52,3 @@
 </div>
 
 <CreateChannel bind:isCreateChannelDialogOpen predefinedChannelType={channelType} {currentServerId}/>
-<!-- <ManageMember bind:isManageMemberDialogOpen members={currentServerMembersList}/> -->

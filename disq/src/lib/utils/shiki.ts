@@ -6,23 +6,37 @@ import {
 } from 'shiki';
 
 export const PRELOADED_LANGS = [
-	'javascript',
-	'typescript',
-	'python',
-	'svelte',
-	'rust',
-	'tsx',
-	'html',
-	'css',
+	'angular-html',
+	'angular-ts',
+	'asm',
+	'c',
 	'cpp',
 	'csharp',
-	'c',
+	'css',
+	'csv',
+	'dart',
 	'docker',
+	'elixir',
+	'go',
+	'haskell',
+	'html',
+	'java',
+	'javascript',
 	'json',
 	'jsx',
+	'kotlin',
 	'lua',
+	'matlab',
+	'nginx',
 	'nix',
-	'razor'
+	'php',
+	'python',
+	'razor',
+	'rust',
+	'svelte',
+	'tsx',
+	'typescript',
+	'zig'
 ] as BundledLanguage[];
 
 export const PRELOADED_THEMES = [

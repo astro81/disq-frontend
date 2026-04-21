@@ -1,5 +1,3 @@
-// /invite/[inviteCode]/+page.server.ts
-
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import {requireAuth} from "$lib/server/utils/session-checker";

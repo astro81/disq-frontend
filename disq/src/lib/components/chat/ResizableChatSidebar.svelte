@@ -13,7 +13,7 @@
 
 	let {
 		children,
-		minWidth = 288, // w-72 equivalent
+		minWidth = 288, 
 		maxWidthRatio = 0.5,
 		className = ''
 	} = $props();

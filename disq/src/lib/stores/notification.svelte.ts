@@ -1,4 +1,3 @@
-// stores/notification.svelte.ts
 import { SvelteDate } from "svelte/reactivity"
 
 export type AppNotification = {

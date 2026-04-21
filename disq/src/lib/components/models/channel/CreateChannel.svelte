@@ -1,4 +1,3 @@
-<!-- CreateChannelDialog.svelte -->
 <script lang="ts">
     import type { ServerChannelType } from "$lib/types/server";
     import { CircleAlert, Lock } from "@lucide/svelte";
@@ -70,7 +69,7 @@
                 oninput={() => createChannel.validate()}
                 class="flex flex-col gap-6 mt-2"
         >
-            <!-- Hidden server ID — passed as a form field -->
+            <!-- Hidden server ID - passed as a form field -->
             <input type="hidden" name="serverId" value={currentServerId} />
 
             <!-- Global errors -->
@@ -105,7 +104,7 @@
                 <Field data-invalid={(createChannel.fields.channelType?.issues() ?? []).length > 0}>
                     <FieldLabel>Channel Type</FieldLabel>
 
-                    <!-- Custom UI — purely visual -->
+                    <!-- Custom UI - purely visual -->
                     <Select type="single" bind:value={channelType}>
                         <SelectTrigger>{channelLabel}</SelectTrigger>
                         <SelectContent>

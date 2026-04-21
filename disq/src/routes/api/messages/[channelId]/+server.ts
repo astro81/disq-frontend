@@ -6,7 +6,7 @@ export const GET: RequestHandler = async ({ params, url, fetch, locals }) => {
 	const { channelId } = params;
 	const cursor = url.searchParams.get('cursor');
 
-	const userId = locals.user?.id; // however you store the current user in locals
+	const userId = locals.user?.id; 
 	if (!userId) error(401, 'Unauthorized');
 
 	let apiUrl = `${env.API_URL}/api/messages/${channelId}`;
