@@ -1,112 +1,119 @@
 <script lang="ts">
-    import type { PageProps } from './$types'
+	import type { PageProps } from './$types';
 
-    import {joinVideoChannel, leaveVideoChannel} from "$lib/stores/video.svelte";
-    import VideoGrid from "$lib/components/video/VideoGrid.svelte";
-    import VideoControls from "$lib/components/video/VideoControls.svelte";
+	import { joinVideoChannel, leaveVideoChannel } from '$lib/stores/video.svelte';
+	import VideoGrid from '$lib/components/video/VideoGrid.svelte';
+	import VideoControls from '$lib/components/video/VideoControls.svelte';
 
-    import {joinVoiceChannel, leaveVoiceChannel} from "$lib/stores/voice.svelte";
-    import VoiceGrid from "$lib/components/voice/VoiceGrid.svelte";
-    import VoiceControls from "$lib/components/voice/VoiceControls.svelte";
+	import { joinVoiceChannel, leaveVoiceChannel } from '$lib/stores/voice.svelte';
+	import VoiceGrid from '$lib/components/voice/VoiceGrid.svelte';
+	import VoiceControls from '$lib/components/voice/VoiceControls.svelte';
 
-    import {connectToChannel, disconnectChannel} from "$lib/stores/socket.svelte";
-    import ChatHeader from "$lib/components/chat/ChatHeader.svelte";
-    import ChatMessages from "$lib/components/chat/ChatMessages.svelte";
-    import ChatInput from "$lib/components/chat/ChatInput.svelte";
+	import { connectToChannel, disconnectChannel } from '$lib/stores/socket.svelte';
+	import ChatHeader from '$lib/components/chat/ChatHeader.svelte';
+	import ChatMessages from '$lib/components/chat/ChatMessages.svelte';
+	import ChatInput from '$lib/components/chat/ChatInput.svelte';
+	import ResizableChatSidebar from '$lib/components/chat/ResizableChatSidebar.svelte';
 
-    let { data }: PageProps = $props()
+	let { data }: PageProps = $props();
 
-    let currentChannel = $derived(data.currentChannel)
-    let currentMember = $derived(data.currentChannelMember)
-    let channelType = $derived(currentChannel.channelType.toLowerCase())
+	let currentChannel = $derived(data.currentChannel);
+	let currentMember = $derived(data.currentChannelMember);
+	let channelType = $derived(currentChannel.channelType.toLowerCase());
 
-    // Chat socket runs for ALL channel types since text, video, voice need chat
-    $effect(() => {
-        connectToChannel(currentChannel.channelId, currentMember)
-        return () => disconnectChannel()
-    })
+	// Chat socket runs for ALL channel types since text, video, voice need chat
+	$effect(() => {
+		if (currentMember) {
+			connectToChannel(currentChannel.channelId, currentMember);
+			return () => disconnectChannel();
+		}
+	});
 
+	// Handle voice store mounting
+	$effect(() => {
+		if (channelType === 'voice' && currentMember) {
+			joinVoiceChannel(currentChannel.channelId, currentMember);
+			return () => leaveVoiceChannel();
+		}
+	});
 
-    // Handle voice store mounting
-    $effect(() => {
-        if (channelType === 'voice') {
-            joinVoiceChannel(currentChannel.channelId, currentMember)
-            return () => leaveVoiceChannel()
-        }
-    })
+	// Handle video store mounting
+	$effect(() => {
+		if (channelType === 'video' && currentMember) {
+			joinVideoChannel(currentChannel.channelId, currentMember);
+			return () => leaveVideoChannel();
+		}
+	});
 
-    // Handle video store mounting
-    $effect(() => {
-        if (channelType === 'video') {
-            joinVideoChannel(currentChannel.channelId, currentMember)
-            return () => leaveVideoChannel()
-        }
-    })
-
-    let showChat = $state(true)
+	let showChat = $state(true);
 </script>
 
 {#if channelType === 'text'}
-    <div class="flex h-screen flex-col">
-        <ChatHeader name={currentChannel.channelName} type="channel" />
-        <ChatMessages currentMemberId={currentMember.memberId} />
-        <ChatInput channelName={currentChannel.channelName} />
-    </div>
+	<div class="flex h-screen flex-col">
+		<ChatHeader name={currentChannel.channelName} type="channel" />
+		{#if currentMember}
+			<ChatMessages currentMemberId={currentMember.memberId} />
+			<ChatInput channelName={currentChannel.channelName} />
+		{/if}
+	</div>
 {/if}
 
 {#if channelType === 'voice'}
-    <div class="flex h-screen flex-col bg-zinc-950">
-        <div class="flex h-12 items-center justify-between border-b border-zinc-800 px-4">
-            <span class="text-sm font-semibold text-zinc-200">{currentChannel.channelName}</span>
-            <button
-                    onclick={() => showChat = !showChat}
-                    class="rounded-lg px-3 py-1 text-xs transition
-               {showChat ? 'bg-indigo-600 text-white' : 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'}"
-            >
-                {showChat ? 'Hide Chat' : 'Show Chat'}
-            </button>
-        </div>
-        <div class="flex flex-1 overflow-hidden">
-            <div class="flex flex-1 flex-col">
-                <VoiceGrid/>
-                <VoiceControls onLeave={() => history.back()}/>
-            </div>
-            {#if showChat}
-                <div class="flex w-72 flex-col border-l border-zinc-800">
-                    <ChatMessages currentMemberId={currentMember.memberId}/>
-                    <ChatInput channelName={currentChannel.channelName}/>
-                </div>
-            {/if}
-        </div>
-    </div>
+	<div class="flex h-screen flex-col bg-zinc-950">
+		<div class="flex h-12 items-center justify-between border-b border-zinc-800 px-4">
+			<span class="text-sm font-semibold text-zinc-200">{currentChannel.channelName}</span>
+			<button
+				onclick={() => (showChat = !showChat)}
+				class="rounded-lg px-3 py-1 text-xs transition
+               {showChat
+					? 'bg-indigo-600 text-white'
+					: 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'}"
+			>
+				{showChat ? 'Hide Chat' : 'Show Chat'}
+			</button>
+		</div>
+		<div class="flex flex-1 overflow-hidden">
+			<div class="flex flex-1 flex-col">
+				<VoiceGrid />
+				<VoiceControls onLeave={() => history.back()} />
+			</div>
+			{#if showChat && currentMember}
+				<ResizableChatSidebar>
+					<ChatMessages currentMemberId={currentMember.memberId} />
+					<ChatInput channelName={currentChannel.channelName} />
+				</ResizableChatSidebar>
+			{/if}
+		</div>
+	</div>
 {/if}
 
 {#if channelType === 'video'}
-    <div class="flex h-screen flex-col bg-zinc-950">
+	<div class="flex h-screen flex-col bg-zinc-950">
+		<div class="flex h-12 items-center justify-between border-b border-zinc-800 px-4">
+			<span class="text-sm font-semibold text-zinc-200">{currentChannel.channelName}</span>
+			<button
+				onclick={() => (showChat = !showChat)}
+				class="rounded-lg px-3 py-1 text-xs transition
+               {showChat
+					? 'bg-indigo-600 text-white'
+					: 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'}"
+			>
+				{showChat ? 'Hide Chat' : 'Show Chat'}
+			</button>
+		</div>
 
-        <div class="flex h-12 items-center justify-between border-b border-zinc-800 px-4">
-            <span class="text-sm font-semibold text-zinc-200">{currentChannel.channelName}</span>
-            <button
-                    onclick={() => showChat = !showChat}
-                    class="rounded-lg px-3 py-1 text-xs transition
-               {showChat ? 'bg-indigo-600 text-white' : 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'}"
-            >
-                {showChat ? 'Hide Chat' : 'Show Chat'}
-            </button>
-        </div>
+		<div class="flex flex-1 overflow-hidden">
+			<div class="flex flex-1 flex-col">
+				<VideoGrid />
+				<VideoControls onLeave={() => history.back()} />
+			</div>
 
-        <div class="flex flex-1 overflow-hidden">
-            <div class="flex flex-1 flex-col">
-                <VideoGrid/>
-                <VideoControls onLeave={() => history.back()}/>
-            </div>
-
-            {#if showChat}
-                <div class="flex w-72 flex-col border-l border-zinc-800">
-                    <ChatMessages currentMemberId={currentMember.memberId}/>
-                    <ChatInput channelName={currentChannel.channelName}/>
-                </div>
-            {/if}
-        </div>
-    </div>
+			{#if showChat && currentMember}
+				<ResizableChatSidebar>
+					<ChatMessages currentMemberId={currentMember.memberId} />
+					<ChatInput channelName={currentChannel.channelName} />
+				</ResizableChatSidebar>
+			{/if}
+		</div>
+	</div>
 {/if}
